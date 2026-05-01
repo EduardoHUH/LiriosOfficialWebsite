@@ -1,0 +1,128 @@
+<div class="admin-page">
+  <header class="admin-header">
+    <div class="section-shell d-flex align-items-center justify-content-between py-3">
+      <a routerLink="/admin/dashboard" class="btn btn-outline-dark">
+        <i class="bi bi-arrow-left me-2"></i>
+        Volver
+      </a>
+      <button class="btn btn-outline-dark" type="button" (click)="logout()">Salir</button>
+    </div>
+  </header>
+
+  <main class="py-4 py-lg-5">
+    <div class="section-shell">
+      <div *ngIf="loading" class="app-card p-5 text-center">
+        <div class="spinner-border text-dark"></div>
+        <p class="soft-label mt-3 mb-0">Cargando detalle...</p>
+      </div>
+
+      <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+      <div *ngIf="data as detail" class="row g-4">
+        <div class="col-xl-4">
+          <div class="app-card p-4 detail-side">
+            <div class="soft-label">Cotizacion</div>
+            <h1 class="h2 mb-3">#{{ detail.quote.id }}</h1>
+            <span class="status-pill" [ngClass]="statusClass">{{ detail.quote.status }}</span>
+
+            <div class="detail-meta mt-4">
+              <div>
+                <span class="soft-label d-block">Cliente</span>
+                <strong>{{ detail.quote.name || 'Sin nombre' }}</strong>
+              </div>
+              <div>
+                <span class="soft-label d-block">Telefono</span>
+                <strong>{{ detail.quote.phone || detail.quote.contact_phone || 'Sin telefono' }}</strong>
+              </div>
+              <div>
+                <span class="soft-label d-block">Correo</span>
+                <strong>{{ detail.quote.email || 'Sin correo' }}</strong>
+              </div>
+              <div>
+                <span class="soft-label d-block">Fecha solicitada</span>
+                <strong>{{ detail.quote.appointment_date || 'Sin fecha' }}</strong>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <label class="form-label">Estado</label>
+              <select class="form-select" [ngModel]="detail.quote.status" (ngModelChange)="updateStatus($event)">
+                <option value="pending">pending</option>
+                <option value="approved">approved</option>
+                <option value="rejected">rejected</option>
+                <option value="completed">completed</option>
+              </select>
+            </div>
+
+            <button class="btn btn-dark w-100 mt-4" type="button" (click)="openPdf()">
+              <i class="bi bi-file-earmark-pdf me-2"></i>
+              Descargar PDF
+            </button>
+          </div>
+        </div>
+
+        <div class="col-xl-8">
+          <div class="app-card p-4 p-lg-5">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+              <div>
+                <div class="soft-label">Total</div>
+                <div class="h1 mb-0">Lps. {{ detail.quote.total | number: '1.0-0' }}</div>
+              </div>
+              <div class="soft-label">Creada {{ detail.quote.created_at | date: 'medium' }}</div>
+            </div>
+
+            <section class="detail-section">
+              <h2>Servicios</h2>
+              <div class="detail-row" *ngFor="let item of detail.items">
+                <div>
+                  <strong>{{ item.technique_label || item.technique_name || 'Servicio' }}</strong>
+                  <span class="soft-label d-block">{{ item.length_label || item.length_name || 'Sin largo' }} · Cantidad {{ item.quantity }}</span>
+                </div>
+                <span>Lps. {{ item.price * item.quantity }}</span>
+              </div>
+              <div *ngIf="detail.items.length === 0" class="soft-label">Sin servicios.</div>
+            </section>
+
+            <section class="detail-section">
+              <h2>Extras</h2>
+              <div class="detail-row" *ngFor="let extra of detail.extras">
+                <div>
+                  <strong>{{ extra.extra_label || extra.extra_name || 'Extra' }}</strong>
+                  <span class="soft-label d-block">Cantidad {{ extra.quantity }}</span>
+                </div>
+                <span>Lps. {{ extra.price * extra.quantity }}</span>
+              </div>
+              <div *ngIf="detail.extras.length === 0" class="soft-label">Sin extras.</div>
+            </section>
+
+            <section class="detail-section">
+              <h2>Decoraciones</h2>
+              <div class="detail-row" *ngFor="let decoration of detail.decorations">
+                <div>
+                  <strong>{{ decoration.decoration_label || decoration.decoration_name || 'Decoracion' }}</strong>
+                  <span class="soft-label d-block">Cantidad {{ decoration.quantity }}</span>
+                </div>
+                <span>Lps. {{ decoration.price * decoration.quantity }}</span>
+              </div>
+              <div *ngIf="detail.decorations.length === 0" class="soft-label">Sin decoraciones.</div>
+            </section>
+
+            <section class="detail-section" *ngIf="detail.quote.notes">
+              <h2>Notas</h2>
+              <p class="mb-0">{{ detail.quote.notes }}</p>
+            </section>
+
+            <section class="detail-section" *ngIf="detail.quote.reference_image_path">
+              <h2>Foto de referencia</h2>
+              <img
+                class="reference-image"
+                [src]="getReferenceImageUrl(detail.quote.reference_image_path)"
+                alt="Foto de referencia de la clienta"
+              />
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

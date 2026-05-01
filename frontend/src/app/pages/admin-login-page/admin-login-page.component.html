@@ -1,0 +1,72 @@
+<div class="admin-login-page">
+  <div class="section-shell min-vh-100 d-flex align-items-center py-5">
+    <div class="row g-4 align-items-center w-100">
+      <div class="col-lg-6">
+        <span class="chip-badge mb-3">
+          <i class="bi bi-lock"></i>
+          Acceso privado
+        </span>
+        <h1 class="page-title mb-3">Panel Administrativo</h1>
+        <p class="page-subtitle mb-4">
+          Entra con tu cuenta, filtra por estado, abre el detalle, cambia estatus y descarga el
+          PDF de cada solicitud.
+        </p>
+        <a routerLink="/" class="btn btn-outline-dark px-4">Volver al sitio</a>
+      </div>
+
+      <div class="col-lg-5 offset-lg-1">
+        <div class="glass-panel login-card p-4 p-lg-5">
+          <div class="login-logo-wrap">
+            <div class="login-logo-shell">
+              <img class="login-logo" src="lirios-logo.jpeg" alt="Logo de Lirios" />
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <div class="soft-label">Lirios</div>
+            <h2 class="mb-1">Iniciar sesion</h2>
+            <p class="soft-label mb-0">Solo para administracion del salon</p>
+          </div>
+
+          <form [formGroup]="form" class="row g-3" (ngSubmit)="submit()">
+            <div class="col-12">
+              <label class="form-label">Correo</label>
+              <input class="form-control" type="email" formControlName="email" placeholder="admin@lirios.com" />
+              <div class="field-error" *ngIf="form.controls.email.touched && form.controls.email.hasError('required')">
+                El correo es obligatorio.
+              </div>
+              <div class="field-error" *ngIf="form.controls.email.touched && form.controls.email.hasError('email')">
+                Escribe un correo valido.
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Contrasena</label>
+              <input class="form-control" type="password" formControlName="password" placeholder="Tu contrasena" />
+              <div class="field-error" *ngIf="form.controls.password.touched && form.controls.password.hasError('required')">
+                La contrasena es obligatoria.
+              </div>
+              <div class="field-error" *ngIf="form.controls.password.touched && form.controls.password.hasError('minlength')">
+                La contrasena debe tener al menos 4 caracteres.
+              </div>
+            </div>
+            <div class="col-12" *ngIf="formMessage">
+              <div class="alert alert-warning mb-0">{{ formMessage }}</div>
+            </div>
+            <div class="col-12" *ngIf="errorMessage">
+              <div class="alert alert-danger mb-0">{{ errorMessage }}</div>
+            </div>
+            <div class="col-12">
+              <button class="btn btn-dark w-100" type="submit" [disabled]="loading">
+                <span *ngIf="!loading">Entrar al panel</span>
+                <span *ngIf="loading" class="d-inline-flex align-items-center gap-2">
+                  <span class="spinner-border spinner-border-sm"></span>
+                  Entrando...
+                </span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

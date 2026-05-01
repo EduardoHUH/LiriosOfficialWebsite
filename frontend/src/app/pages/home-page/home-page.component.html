@@ -1,0 +1,408 @@
+<div class="home-page">
+  <header class="site-header">
+    <div class="section-shell d-flex align-items-center justify-content-between py-3">
+      <a class="brand-mark" href="#">
+        <img class="brand-logo" src="lirios-logo.jpeg" alt="Logo de Lirios" />
+        <span class="brand-text">
+          <strong>Lirios</strong>
+          <small>Beauty Studio</small>
+        </span>
+      </a>
+      <nav class="d-none d-md-flex align-items-center gap-4 text-secondary">
+        <a routerLink="/admin/login" class="btn btn-outline-dark btn-sm px-3">Admin</a>
+      </nav>
+      <a routerLink="/admin/login" class="btn btn-outline-dark btn-sm d-md-none px-3">Admin</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero-section">
+      <div class="section-shell hero-grid">
+        <div class="hero-copy">
+          <span class="chip-badge mb-3">
+            <i class="bi bi-stars"></i>
+            Lirios, cotizaciones elegantes y claras
+          </span>
+          <h1 class="page-title">Cotizaciones personalizadas en tu salon favorito.</h1>
+          <div class="hero-actions d-flex flex-wrap gap-3 mt-4">
+            <a href="#cotizador" class="btn btn-dark px-4">Crear cotizacion</a>
+          </div>
+        </div>
+
+        <div class="hero-preview glass-panel">
+          <div class="preview-top">
+            <span class="preview-tag">Lirios Beauty Studio</span>
+            <span class="preview-dot"></span>
+          </div>
+          <div class="preview-main">
+            <div class="preview-logo-wrap">
+              <div class="preview-logo-shell">
+                <img class="preview-logo" src="lirios-logo.jpeg" alt="Logo de Lirios" />
+              </div>
+            </div>
+            <div class="preview-contact">
+              <a
+                class="preview-contact-row"
+                href="https://instagram.com/lirioshn._"
+                target="_blank"
+                rel="noopener"
+              >
+                <i class="bi bi-instagram"></i>
+                <span>@lirioshn._</span>
+              </a>
+              <a class="preview-contact-row" href="tel:+50498595312">
+                <i class="bi bi-telephone"></i>
+                <span>+504 9859-5312</span>
+              </a>
+            </div>
+            <div class="preview-announcement" *ngIf="announcement">
+              <i class="bi bi-megaphone"></i>
+              <p class="mb-0">{{ announcement }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="gallery-section">
+      <div class="gallery-carousel-wrapper">
+        <img class="gallery-floral" src="gallery/floral-frame.png" alt="" />
+        <div class="gallery-carousel">
+          <div
+            class="carousel-track"
+            [style.transform]="'translateX(-' + currentSlide * 100 + '%)'"
+          >
+            <div class="carousel-slide" *ngFor="let slide of slides">
+              <img [src]="slide.src" [alt]="slide.alt" />
+            </div>
+          </div>
+
+          <button class="carousel-arrow carousel-arrow-prev" type="button" (click)="prevSlide()">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <button class="carousel-arrow carousel-arrow-next" type="button" (click)="nextSlide()">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+
+          <div class="carousel-dots">
+            <button
+              *ngFor="let slide of slides; let i = index"
+              class="carousel-dot"
+              [class.active]="i === currentSlide"
+              type="button"
+              (click)="goToSlide(i)"
+            ></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="cotizador" class="quote-builder-section">
+      <div class="section-shell">
+        <div class="builder-head mb-4">
+          <span class="chip-badge">
+            <i class="bi bi-pencil-square"></i>
+            Cotizador Lirios
+          </span>
+          <h2 class="mt-3 mb-2">Crea tu cita a tu preferencia de manera sencilla.</h2>
+        </div>
+
+        <div *ngIf="loadingCatalog" class="app-card p-5 text-center">
+          <div class="spinner-border text-dark" role="status"></div>
+          <p class="soft-label mt-3 mb-0">Cargando catalogo del salon...</p>
+        </div>
+
+        <div *ngIf="catalogLoadFailed" class="app-card p-4 p-lg-5 text-center">
+          <h3 class="h4 mb-2">No pudimos cargar el catalogo</h3>
+          <button class="btn btn-dark px-4" type="button" (click)="loadCatalog()">
+            Reintentar
+          </button>
+        </div>
+
+        <div *ngIf="!loadingCatalog && !catalogLoadFailed" class="row g-4 align-items-start">
+          <div class="col-xl-8">
+            <div class="app-card p-4 p-lg-5">
+              <form [formGroup]="customerForm" class="row g-3">
+                <div class="col-12">
+                  <h3 class="form-title">Tus datos</h3>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Nombre</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    formControlName="name"
+                    placeholder="Tu nombre"
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Telefono</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    formControlName="phone"
+                    placeholder="Tu telefono"
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Correo</label>
+                  <input
+                    class="form-control"
+                    type="email"
+                    formControlName="email"
+                    placeholder="Opcional"
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Fecha deseada</label>
+                  <input
+                    class="form-control"
+                    type="datetime-local"
+                    formControlName="appointment_date"
+                  />
+                </div>
+                <div class="col-12">
+                  <label class="form-label">Notas</label>
+                  <textarea
+                    class="form-control notes-box"
+                    rows="3"
+                    formControlName="notes"
+                    placeholder="Cuéntanos si quieres un estilo o detalle en particular"
+                  ></textarea>
+                </div>
+                <div class="col-12">
+                  <label class="form-label">Foto de referencia</label>
+                  <input
+                    class="form-control"
+                    type="file"
+                    accept="image/*"
+                    (change)="onReferenceImageSelected($event)"
+                  />
+                  <div class="soft-label mt-2" *ngIf="selectedReferenceImageName">
+                    Imagen seleccionada: {{ selectedReferenceImageName }}
+                  </div>
+                </div>
+              </form>
+
+              <div id="servicios" class="builder-block mt-5">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                  <h3 class="form-title mb-0">Servicio principal</h3>
+                  <span class="soft-label">Tecnica + largo</span>
+                </div>
+                <form [formGroup]="serviceForm" class="row g-3">
+                  <div class="col-md-5">
+                    <label class="form-label">Tecnica</label>
+                    <select class="form-select" formControlName="technique_id">
+                      <option [value]="0">Selecciona una tecnica</option>
+                      <option *ngFor="let technique of techniques" [value]="technique.id">
+                        {{ technique.name }} - Lps. {{ technique.base_price }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Largo</label>
+                    <select class="form-select" formControlName="length_id">
+                      <option [value]="0">Selecciona un largo</option>
+                      <option *ngFor="let length of lengths" [value]="length.id">
+                        {{ length.name }} - Lps. {{ length.extra_price }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Cantidad</label>
+                    <input class="form-control" type="number" min="1" formControlName="quantity" />
+                  </div>
+                  <div class="col-12">
+                    <button class="btn btn-dark px-4" type="button" (click)="addServiceItem()">
+                      <i class="bi bi-plus-lg me-2"></i>Agregar servicio
+                    </button>
+                  </div>
+                </form>
+                <div class="selection-list mt-3" *ngIf="selectedItems.length > 0">
+                  <div
+                    class="selection-row"
+                    *ngFor="let item of selectedItems; trackBy: trackByIndex; let i = index"
+                  >
+                    <div>
+                      <strong>{{ item.technique_name }}</strong>
+                      <span class="soft-label d-block"
+                        >{{ item.length_name }} · Cantidad {{ item.quantity }}</span
+                      >
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                      <span>Lps. {{ item.price * item.quantity }}</span>
+                      <button
+                        class="btn btn-outline-dark btn-sm"
+                        type="button"
+                        (click)="removeService(i)"
+                      >
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="builder-block mt-5">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                  <h3 class="form-title mb-0">Decoraciones</h3>
+                  <span class="soft-label">Toques finales</span>
+                </div>
+                <form [formGroup]="decorationForm" class="row g-3">
+                  <div class="col-md-8">
+                    <label class="form-label">Decoracion</label>
+                    <select class="form-select" formControlName="decoration_id">
+                      <option [value]="0">Selecciona una decoracion</option>
+                      <option *ngFor="let decoration of decorationsCatalog" [value]="decoration.id">
+                        {{ decoration.name }} - Lps. {{ decoration.price }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Cantidad</label>
+                    <input class="form-control" type="number" min="1" formControlName="quantity" />
+                  </div>
+                  <div class="col-12">
+                    <button
+                      class="btn btn-outline-dark px-4"
+                      type="button"
+                      (click)="addDecoration()"
+                    >
+                      <i class="bi bi-plus-lg me-2"></i>Agregar decoracion
+                    </button>
+                  </div>
+                </form>
+                <div class="selection-list mt-3" *ngIf="selectedDecorations.length > 0">
+                  <div
+                    class="selection-row"
+                    *ngFor="
+                      let decoration of selectedDecorations;
+                      trackBy: trackByIndex;
+                      let i = index
+                    "
+                  >
+                    <div>
+                      <strong>{{ decoration.decoration_name }}</strong>
+                      <span class="soft-label d-block">Cantidad {{ decoration.quantity }}</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                      <span>Lps. {{ decoration.price * decoration.quantity }}</span>
+                      <button
+                        class="btn btn-outline-dark btn-sm"
+                        type="button"
+                        (click)="removeDecoration(i)"
+                      >
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="builder-block mt-5">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                  <h3 class="form-title mb-0">Extras</h3>
+                  <span class="soft-label">Retiro, reparaciones y mas</span>
+                </div>
+                <form [formGroup]="extraForm" class="row g-3">
+                  <div class="col-md-8">
+                    <label class="form-label">Extra</label>
+                    <select class="form-select" formControlName="extra_id">
+                      <option [value]="0">Selecciona un extra</option>
+                      <option *ngFor="let extra of extrasCatalog" [value]="extra.id">
+                        {{ extra.name }} - Lps. {{ extra.price }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Cantidad</label>
+                    <input class="form-control" type="number" min="1" formControlName="quantity" />
+                  </div>
+                  <div class="col-12">
+                    <button class="btn btn-outline-dark px-4" type="button" (click)="addExtra()">
+                      <i class="bi bi-plus-lg me-2"></i>Agregar extra
+                    </button>
+                  </div>
+                </form>
+                <div class="selection-list mt-3" *ngIf="selectedExtras.length > 0">
+                  <div
+                    class="selection-row"
+                    *ngFor="let extra of selectedExtras; trackBy: trackByIndex; let i = index"
+                  >
+                    <div>
+                      <strong>{{ extra.extra_name }}</strong>
+                      <span class="soft-label d-block">Cantidad {{ extra.quantity }}</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                      <span>Lps. {{ extra.price * extra.quantity }}</span>
+                      <button
+                        class="btn btn-outline-dark btn-sm"
+                        type="button"
+                        (click)="removeExtra(i)"
+                      >
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-4">
+            <aside class="summary-sticky">
+              <div class="app-card p-4 p-lg-4 summary-panel">
+                <div class="d-flex justify-content-between align-items-start mb-4">
+                  <div>
+                    <div class="soft-label">Resumen actual</div>
+                    <h3 class="mb-0">Tu cotizacion</h3>
+                  </div>
+                </div>
+                <div class="summary-lines">
+                  <div class="summary-line">
+                    <span>Servicios</span>
+                    <strong>{{ selectedItems.length }}</strong>
+                  </div>
+                  <div class="summary-line">
+                    <span>Extras</span>
+                    <strong>{{ selectedExtras.length }}</strong>
+                  </div>
+                  <div class="summary-line">
+                    <span>Decoraciones</span>
+                    <strong>{{ selectedDecorations.length }}</strong>
+                  </div>
+                </div>
+                <div class="summary-total mt-4">
+                  <span class="soft-label">Total estimado</span>
+                  <div class="total-amount">Lps. {{ getTotal() | number: '1.0-0' }}</div>
+                </div>
+                <div class="alert alert-danger mt-4 mb-0" *ngIf="errorMessage">
+                  {{ errorMessage }}
+                </div>
+                <div class="alert alert-success mt-4 mb-0" *ngIf="successMessage">
+                  {{ successMessage }}
+                </div>
+                <div class="success-note mt-3" *ngIf="createdQuoteId">
+                  <span class="soft-label">Numero de cotizacion</span>
+                  <strong>#{{ createdQuoteId }}</strong>
+                </div>
+                <button
+                  class="btn btn-accent w-100 mt-4"
+                  type="button"
+                  [disabled]="submitting"
+                  (click)="submitQuote()"
+                >
+                  <span *ngIf="!submitting">Enviar cotizacion</span>
+                  <span *ngIf="submitting" class="d-inline-flex align-items-center gap-2">
+                    <span class="spinner-border spinner-border-sm"></span>
+                    Guardando...
+                  </span>
+                </button>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>

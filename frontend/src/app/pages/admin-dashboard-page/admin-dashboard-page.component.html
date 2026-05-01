@@ -1,0 +1,173 @@
+<div class="admin-page">
+  <header class="admin-header">
+    <div class="section-shell d-flex align-items-center justify-content-between py-3">
+      <div class="admin-brand">
+        <img class="admin-brand-logo" src="lirios-logo.jpeg" alt="Logo de Lirios" />
+        <div class="soft-label">Panel privado</div>
+        <h1 class="h4 mb-0">Lirios</h1>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <span class="chip-badge">{{ userName }}</span>
+        <button class="btn btn-outline-dark" type="button" (click)="logout()">Salir</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="py-4 py-lg-5">
+    <div class="section-shell">
+
+      <!-- Métricas -->
+      <section class="mb-4">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="app-card p-4 h-100">
+              <div class="soft-label">Pendientes</div>
+              <div class="metric-value">{{ pendingCount() }}</div>
+              <div class="soft-label">cotizaciones esperando respuesta</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="app-card p-4 h-100">
+              <div class="soft-label">Aprobadas</div>
+              <div class="metric-value">{{ approvedCount() }}</div>
+              <div class="soft-label">listas para avanzar a cita</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="app-card p-4 h-100">
+              <div class="soft-label">Total cotizado</div>
+              <div class="metric-value">Lps. {{ revenueTotal() | number: '1.0-0' }}</div>
+              <div class="soft-label">suma de solicitudes registradas</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Anuncio -->
+      <section class="app-card p-4 mb-4">
+        <h2 class="h5 mb-1">Anuncio en la pagina principal</h2>
+        <p class="soft-label mb-3">Lo que escribas aqui aparecera visible para tus clientas en el inicio.</p>
+        <div class="d-flex gap-2 align-items-start">
+          <textarea
+            class="form-control"
+            rows="2"
+            [(ngModel)]="announcement"
+            placeholder="Ej: Esta semana tenemos promocion en acrilico con tips. Agenda tu cita!"
+          ></textarea>
+          <button class="btn btn-dark px-4" type="button" [disabled]="savingAnnouncement" (click)="saveAnnouncement()">
+            <span *ngIf="!savingAnnouncement">Guardar</span>
+            <span *ngIf="savingAnnouncement">Guardando...</span>
+          </button>
+        </div>
+        <div class="alert alert-success mt-2 mb-0 py-2" *ngIf="announcementSaved">
+          Anuncio guardado. Ya se ve en la pagina.
+        </div>
+      </section>
+
+      <!-- Cotizaciones -->
+      <section class="app-card p-4">
+        <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-4">
+          <div>
+            <h2 class="h4 mb-1">Cotizaciones</h2>
+            <p class="soft-label mb-0">Revisa, filtra, cambia estado y abre el detalle.</p>
+          </div>
+          <div class="d-flex flex-column flex-md-row gap-2 align-items-stretch">
+            <input
+              class="form-control"
+              type="search"
+              placeholder="Buscar por ID, nombre o telefono"
+              [ngModel]="searchTerm()"
+              (ngModelChange)="updateSearch($event)"
+            />
+            <div class="btn-group">
+              <button class="btn" [class.btn-dark]="filter() === 'all'" [class.btn-outline-dark]="filter() !== 'all'" type="button" (click)="setFilter('all')">Todas</button>
+              <button class="btn" [class.btn-dark]="filter() === 'pending'" [class.btn-outline-dark]="filter() !== 'pending'" type="button" (click)="setFilter('pending')">Pending</button>
+              <button class="btn" [class.btn-dark]="filter() === 'approved'" [class.btn-outline-dark]="filter() !== 'approved'" type="button" (click)="setFilter('approved')">Approved</button>
+              <button class="btn" [class.btn-dark]="filter() === 'completed'" [class.btn-outline-dark]="filter() !== 'completed'" type="button" (click)="setFilter('completed')">Completed</button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="errorMessage" class="alert alert-danger mb-4">{{ errorMessage }}</div>
+
+        <div *ngIf="loading()" class="text-center py-5">
+          <div class="spinner-border text-dark"></div>
+          <p class="soft-label mt-3 mb-0">Cargando cotizaciones...</p>
+        </div>
+
+        <div *ngIf="!loading()" class="table-shell">
+          <table class="table align-middle mb-0">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Fecha</th>
+                <th>Total</th>
+                <th>Estado</th>
+                <th class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let quote of filteredQuotes()">
+                <td data-label="ID">#{{ quote.id }}</td>
+                <td data-label="Cliente">
+                  <div class="fw-semibold">{{ quote.name || 'Sin nombre' }}</div>
+                  <div class="soft-label">{{ quote.phone || quote.contact_phone || 'Sin telefono' }}</div>
+                </td>
+                <td data-label="Fecha">{{ quote.appointment_date || quote.created_at | date: 'medium' }}</td>
+                <td data-label="Total">Lps. {{ quote.total | number: '1.0-0' }}</td>
+                <td data-label="Estado">
+                  <select class="form-select form-select-sm" [ngModel]="quote.status" (ngModelChange)="onStatusChange(quote, $event)">
+                    <option value="pending">pending</option>
+                    <option value="approved">approved</option>
+                    <option value="rejected">rejected</option>
+                    <option value="completed">completed</option>
+                  </select>
+                </td>
+                <td class="text-end" data-label="Acciones">
+                  <div class="d-inline-flex flex-wrap justify-content-end gap-2">
+                    <a class="btn btn-outline-dark btn-sm" [routerLink]="['/admin/quotes', quote.id]">
+                      <i class="bi bi-eye me-1"></i>Ver
+                    </a>
+                    <button class="btn btn-outline-dark btn-sm" type="button" (click)="openPdf(quote.id)">
+                      <i class="bi bi-file-earmark-pdf me-1"></i>PDF
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm" type="button" (click)="confirmDelete(quote)">
+                      <i class="bi bi-trash3 me-1"></i>Eliminar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="filteredQuotes().length === 0">
+                <td colspan="6" class="text-center py-5 soft-label">No hay cotizaciones para ese filtro.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<!-- Backdrop -->
+<div class="modal-backdrop-custom" *ngIf="quoteToDelete()"></div>
+
+<!-- Modal eliminar -->
+<div class="modal-custom" *ngIf="quoteToDelete()">
+  <div class="modal-custom-dialog">
+    <div class="modal-custom-header">
+      <h5 class="mb-0">Eliminar cotizacion</h5>
+    </div>
+    <div class="modal-custom-body">
+      <p class="mb-1">Estas a punto de eliminar la cotizacion <strong>#{{ quoteToDelete()?.id }}</strong> de <strong>{{ quoteToDelete()?.name || 'Sin nombre' }}</strong>.</p>
+      <p class="soft-label mb-0">Esta accion no se puede deshacer.</p>
+    </div>
+    <div class="modal-custom-footer">
+      <button class="btn btn-outline-dark" type="button" (click)="cancelDelete()">Cancelar</button>
+      <button class="btn btn-danger px-4" type="button" [disabled]="deleting()" (click)="confirmDeleteAction()">
+        <span *ngIf="!deleting()">Si, eliminar</span>
+        <span *ngIf="deleting()">Eliminando...</span>
+      </button>
+    </div>
+  </div>
+</div>
