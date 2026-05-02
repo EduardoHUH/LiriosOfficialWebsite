@@ -17,14 +17,14 @@
 
   <main>
     <section class="hero-section">
-      <div class="section-shell hero-grid">
+      <div class="section-shell hero-grid text-center">
         <div class="hero-copy">
-          <span class="chip-badge mb-3">
-            <i class="bi bi-stars"></i>
+          <span class="chip-badge mb-3 ">
+            <i class="bi bi-stars "></i>
             Lirios, cotizaciones elegantes y claras
           </span>
-          <h1 class="page-title">Cotizaciones personalizadas en tu salon favorito.</h1>
-          <div class="hero-actions d-flex flex-wrap gap-3 mt-4">
+          <h1 class="page-title text-center">Cotizaciones personalizadas en tu salon favorito.</h1>
+          <div class="hero-actions d-flex flex-wrap gap-3 mt-4 d-flex justify-content-center align-items-center">
             <a href="#cotizador" class="btn btn-dark px-4">Crear cotizacion</a>
           </div>
         </div>
@@ -104,7 +104,7 @@
             <i class="bi bi-pencil-square"></i>
             Cotizador Lirios
           </span>
-          <h2 class="mt-3 mb-2">Crea tu cita a tu preferencia de manera sencilla.</h2>
+          <h2 class="mt-3 mb-2">Cree su cita a su preferencia de manera sencilla.</h2>
         </div>
 
         <div *ngIf="loadingCatalog" class="app-card p-5 text-center">
@@ -178,9 +178,6 @@
                     accept="image/*"
                     (change)="onReferenceImageSelected($event)"
                   />
-                  <div class="soft-label mt-2" *ngIf="selectedReferenceImageName">
-                    Imagen seleccionada: {{ selectedReferenceImageName }}
-                  </div>
                 </div>
               </form>
 

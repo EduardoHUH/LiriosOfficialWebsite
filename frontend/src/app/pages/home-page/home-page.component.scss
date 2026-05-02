@@ -449,18 +449,20 @@
 
   .gallery-section { padding: 1rem 0; }
 
-  .gallery-carousel-wrapper { padding: 1.5rem 1rem; }
+  .gallery-carousel-wrapper { padding: 3rem 2rem; }
 
   .gallery-carousel {
-    border-radius: 0;
-    max-height: 280px;
+    border-radius: 5;
+    max-height: 190px;
   }
 
-  .carousel-slide img { height: 280px; }
+  .carousel-slide img { height: 190px; }
 
   .carousel-arrow {
-    width: 2.2rem;
-    height: 2.2rem;
-    font-size: 0.85rem;
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+    top: auto;
+    bottom: 0.5rem;
   }
 }
