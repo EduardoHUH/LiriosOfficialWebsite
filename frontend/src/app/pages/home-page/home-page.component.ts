@@ -71,7 +71,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   customerForm = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
     phone: ['', [Validators.required, Validators.minLength(8)]],
-    email: ['', [Validators.email]],
+    email: ['', []],
     appointment_date: [''],
     notes: ['']
   });
