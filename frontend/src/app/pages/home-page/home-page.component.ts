@@ -68,13 +68,13 @@ export class HomePageComponent implements OnInit, OnDestroy {
   selectedExtras: QuoteExtraPayload[] = [];
   selectedDecorations: QuoteDecorationPayload[] = [];
 
-  customerForm = this.fb.nonNullable.group({
-    name: ['', [Validators.required, Validators.minLength(3)]],
-    phone: ['', [Validators.required, Validators.minLength(8)]],
-    email: ['', []],
-    appointment_date: [''],
-    notes: ['']
-  });
+    customerForm = this.fb.nonNullable.group({
+      name: ['', [Validators.required]],
+      phone: ['', [Validators.required]],
+      email: ['', []],
+      appointment_date: [''],
+      notes: ['']
+    });
 
   serviceForm = this.fb.nonNullable.group({
     technique_id: [0, [Validators.min(1)]],
