@@ -230,7 +230,7 @@
   height: 105%;
   object-fit: fill;
   pointer-events: none;
-  z-index: 0;
+  z-index: 2;
 }
 
 .gallery-carousel {
@@ -240,7 +240,7 @@
   overflow: hidden;
   border-radius: 24px;
   max-height: 500px;
-  background: #000;
+  background: transparent;
   user-select: none;
 }
 
@@ -262,35 +262,6 @@
     display: block;
   }
 }
-
-.carousel-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 999px;
-  border: none;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(8px);
-  color: #1a1a1a;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-  transition: background 0.2s, transform 0.2s;
-
-  &:hover {
-    background: #fff;
-    transform: translateY(-50%) scale(1.08);
-  }
-}
-
-.carousel-arrow-prev { left: 1rem; }
-.carousel-arrow-next { right: 1rem; }
 
 .carousel-dots {
   position: absolute;

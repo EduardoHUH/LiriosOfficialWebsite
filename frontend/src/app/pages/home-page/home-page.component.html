@@ -19,12 +19,14 @@
     <section class="hero-section">
       <div class="section-shell hero-grid text-center">
         <div class="hero-copy">
-          <span class="chip-badge mb-3 ">
-            <i class="bi bi-stars "></i>
+          <span class="chip-badge mb-3">
+            <i class="bi bi-stars"></i>
             Lirios, cotizaciones elegantes y claras
           </span>
           <h1 class="page-title text-center">Cotizaciones personalizadas en tu salon favorito.</h1>
-          <div class="hero-actions d-flex flex-wrap gap-3 mt-4 d-flex justify-content-center align-items-center">
+          <div
+            class="hero-actions d-flex flex-wrap gap-3 mt-4 d-flex justify-content-center align-items-center"
+          >
             <a href="#cotizador" class="btn btn-dark px-4">Crear cotizacion</a>
           </div>
         </div>
@@ -76,14 +78,6 @@
               <img [src]="slide.src" [alt]="slide.alt" />
             </div>
           </div>
-
-          <button class="carousel-arrow carousel-arrow-prev" type="button" (click)="prevSlide()">
-            <i class="bi bi-chevron-left"></i>
-          </button>
-          <button class="carousel-arrow carousel-arrow-next" type="button" (click)="nextSlide()">
-            <i class="bi bi-chevron-right"></i>
-          </button>
-
           <div class="carousel-dots">
             <button
               *ngFor="let slide of slides; let i = index"
